@@ -35,25 +35,25 @@ TEST(is_matrix_equal, case_1) {
     fclose(r);
 }
 
-// TEST(minor_matrix, case_2) {
+TEST(minor_matrix, case_2) {
 
-//     FILE* input_file = fopen("./project/tests/data/case_2/input", "r");
-//     FILE* output_file = fopen("./project/tests/data/case_2/output", "r");
+    FILE* input_file = fopen("./project/tests/data/case_2/input", "r");
+    FILE* output_file = fopen("./project/tests/data/case_2/output", "r");
 
-//     Matrix* input = create_matrix(input_file);
-//     Matrix* output = create_matrix(output_file);
+    Matrix* input = create_matrix(input_file);
+    Matrix* output = create_matrix(output_file);
 
-//     Matrix* result = minor_matrix(input, input->rows, input->cols, 1, 1);
+    Matrix* result = minor_matrix(input, input->rows, input->cols, 1, 1);
 
-//     ASSERT_TRUE(is_matrix_equal(result, output));
+    ASSERT_TRUE(is_matrix_equal(result, output));
 
-//     free_matrix(input);
-//     free_matrix(output);
-//     free_matrix(result);
+    free_matrix(input);
+    free_matrix(output);
+    free_matrix(result);
 
-//     fclose(input_file);
-//     fclose(output_file);
-// }
+    fclose(input_file);
+    fclose(output_file);
+}
 
 
 int main(int argc, char** argv) {
