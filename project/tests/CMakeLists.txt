@@ -12,5 +12,5 @@ enable_testing()
 
 target_link_libraries(mytest matrix)
 
-include_directories(gtest)
+# include_directories(gtest)
 target_link_libraries(mytest gtest -lpthread)

@@ -22,3 +22,5 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
 
 endif()
+
+include_directories(gtest)
