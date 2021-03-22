@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -Wall -Werror -Wextra -Wpedantic -ggdb3")
 
 add_subdirectory(project)
-add_subdirectory(test)
-
-include_directories(test)
 
 enable_testing()
 
