@@ -5,15 +5,15 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -Wall -Werror -Wextra -Wpedantic -ggdb3")
 
-add_subderictory(project)
-add_subderictory(test)
+add_subdirectory(project)
+add_subdirectory(test)
 
 include_directories(test)
 
 enable_testing()
 
 include_directories(../googletest)
-target_link_libraries(mytest gtest -lpthread)
+# target_link_libraries(mytest gtest -lpthread)
 
 add_subdirectory(../googletest)
 
