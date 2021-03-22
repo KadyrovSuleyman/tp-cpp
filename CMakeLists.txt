@@ -12,12 +12,12 @@ include_directories(test)
 
 enable_testing()
 
-include_directories(../googletest)
+include_directories(googletest)
 # target_link_libraries(mytest gtest -lpthread)
 
-add_subdirectory(../googletest)
+add_subdirectory(googletest)
 
-set(CMAKE_MODULE_PATH ../CMakeModules)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 if(CMAKE_COMPILER_IS_GNUCXX)
     include(CodeCoverage)
     append_coverage_compiler_flags()
