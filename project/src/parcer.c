@@ -9,22 +9,19 @@ int error_handler(const char* invalid_func) {
         perror(invalid_func);
         return -1;
     }
-
     return 0;
 }
 
 
 char* malloc_read(FILE* f) {
     size_t str_len = START_STRING_LENGTH;
-    char* result = (char*)calloc(sizeof(char), str_len);
-
+    char* result = (char*)malloc(sizeof(char) * str_len);
     if (unlikely(error_handler("malloc"))) {
         free(result);
         return NULL;
     }
 
     char* carriage = result;
-
     size_t i = 0;
     size_t j = 1;
     while (!feof(f)) {
@@ -33,19 +30,46 @@ char* malloc_read(FILE* f) {
             j <<= 1;
 
             result = (char*)realloc(result, sizeof(char) * str_len);
+            if (unlikely(error_handler("realloc"))) {
+                free(result);
+                return NULL;
+            }
             carriage = result + (str_len >> 1);
         }
 
         size_t t = fread(carriage, sizeof(char), CHANK_LENGTH, f);
         carriage += t;
     }
-
     *carriage = '\0';
+
+    result = (char*)realloc(result, sizeof(char) * (strlen(result) + 1));
+    if (unlikely(error_handler("realloc"))) {
+        free(result);
+        return NULL;
+    }
 
     return result;
 }
 
 char* mmap_read(FILE* f) {
+    struct stat statbuf;
+    int fd = fileno(f);
+    if (unlikely(error_handler("fileno"))) {
+        return NULL;
+    }
+
+    fstat(fd, &statbuf);
+    if (unlikely(error_handler("fstat"))) {
+        return NULL;
+    }
+
+    char* result = mmap(NULL, statbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    if (unlikely(error_handler("fstat"))) {
+        munmap(result, statbuf.st_size);
+        return NULL;
+    }    
+
+    return result;
 
 }
 

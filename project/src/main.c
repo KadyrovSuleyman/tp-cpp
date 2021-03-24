@@ -5,14 +5,18 @@
 int main(int argc, char** argv) {
     fprintf(stdout, "%s\n", "Hello, World");
 
-    char* test = readfile(stdin);
+    // char* test = readfile(stdin);
+    // fprintf(stdout, "%s\n", test);
+    // free(test);
 
+    FILE* f = fopen("../test.dat", "r");
+    char* test = readfile(f);
     fprintf(stdout, "%s\n", test);
-
+    fclose(f);
 
     fprintf(stdout, "%s\n", "finish");
 
-    free(test);
+
 
     return 0;
 
