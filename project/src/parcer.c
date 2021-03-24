@@ -1,7 +1,8 @@
 #include "parcer.h"
 
 #define unlikely(x)     __builtin_expect((x), 0)
-#define START_STRING_LENGTH 5
+#define START_STRING_LENGTH 16
+#define CHANK_LENGTH 16
 
 int error_handler(const char* invalid_func) {
     if (unlikely(errno)) {
@@ -15,7 +16,6 @@ int error_handler(const char* invalid_func) {
 
 char* malloc_read(FILE* f) {
     size_t str_len = START_STRING_LENGTH;
-    // char* result = (char*)malloc(sizeof(char) * str_len);
     char* result = (char*)calloc(sizeof(char), str_len);
 
     if (unlikely(error_handler("malloc"))) {
@@ -24,46 +24,25 @@ char* malloc_read(FILE* f) {
     }
 
     char* carriage = result;
-    size_t j = str_len;
 
+    size_t i = 0;
+    size_t j = 1;
+    while (!feof(f)) {
+        if (i++ == j) {
+            str_len <<= 1;
+            j <<= 1;
 
-    // realloc(result, 2 * str_len);
+            result = (char*)realloc(result, sizeof(char) * str_len);
+            carriage = result + (str_len >> 1);
+        }
 
-    // realloc(result, 4 * str_len);
-
-
-    while (fscanf(f, "%c", carriage++) != EOF) {
-
-        str_len++;
-        reallocarray(result, sizeof(char), str_len);
-        // if (unlikely(j-- == 1)) {
-            // str_len *= 2;
-        //     j = str_len;
-            // if (unlikely(!reallocarray(result, sizeof(char), str_len))) {
-            //     free(result);
-            //     return NULL;
-            // }
-
-            // fprintf(stderr, "%s\n", "check");
-        // }
-
-        // fprintf(stdout, "%zu\n", j);
-        fprintf(stdout, "%zu\n", strlen(result));
-        // fprintf(stdout, "%s\n", result);
-        // fprintf(stdout, "%zu\n", str_len);
+        size_t t = fread(carriage, sizeof(char), CHANK_LENGTH, f);
+        carriage += t;
     }
 
-    // fprintf(stdout, "%zu\n", sizeof(result));
-    fprintf(stdout, "%s\n", result);
-    fprintf(stdout, "%zu\n", strlen(result));
-
-    // fprintf(stdout, "%c\n", result_start[0]);
-    // fprintf(stdout, "%c\n", result_start[1]);
-    // fprintf(stdout, "%c\n", result_start[2]);
-    // fprintf(stdout, "%c\n", result_start[3]);
+    *carriage = '\0';
 
     return result;
-
 }
 
 char* mmap_read(FILE* f) {

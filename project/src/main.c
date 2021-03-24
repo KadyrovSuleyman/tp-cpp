@@ -7,8 +7,13 @@ int main(int argc, char** argv) {
 
     char* test = readfile(stdin);
 
+    fprintf(stdout, "%s\n", test);
+
 
     fprintf(stdout, "%s\n", "finish");
+
+    free(test);
+
     return 0;
 
     
