@@ -10,9 +10,14 @@ int main(int argc, char** argv) {
     // free(test);
 
     FILE* f = fopen("../test.dat", "r");
-    char* test = readfile(f);
-    fprintf(stdout, "%s\n", test);
+    // char* test = readfile(f);
+    // fprintf(stdout, "%s\n", test);
+
+    main_workflow_mmap(f);
+    
     fclose(f);
+
+    // fprintf(stdout, "%zu\n", munmap(test, ));
 
     fprintf(stdout, "%s\n", "finish");
 

@@ -12,10 +12,12 @@
 #include <sys/mman.h>
 
 
-char* readfile(FILE* f);
+char* readfile(FILE* is);
 
 int error_handler(const char* invalid_func);
-char* malloc_read(FILE* f);
-char* mmap_read(FILE* f);
+char* malloc_read(FILE* is);
+char* mmap_read(FILE* is);
+
+int main_workflow_mmap(FILE* is);
 
 #endif  // PROJECT_INCLUDE_PARCER_H_
