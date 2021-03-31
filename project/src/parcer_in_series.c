@@ -1,4 +1,4 @@
-#include "parcer.h"
+#include "parcer_in_series.h"
 
 #define unlikely(x)     __builtin_expect((x), 0)
 #define START_STRING_LENGTH 16
@@ -51,97 +51,45 @@ char* malloc_read(FILE* is) {
     return result;
 }
 
-/*
-
-char* mmap_read(FILE* is) {
-    struct stat statbuf;
-    int fd = fileno(is);
-    if (unlikely(error_handler("fileno"))) {
-        return NULL;
-    }
-
-    fstat(fd, &statbuf);
-    if (unlikely(error_handler("fstat"))) {
-        return NULL;
-    }
-
-    char* result = mmap(NULL, statbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    if (unlikely(error_handler("fstat"))) {
-        munmap(result, statbuf.st_size);
-        return NULL;
-    }    
-
-    return result;
-}
-
-char* readfile(FILE* is) {
-    if (unlikely(!is)) {
-        fprintf(stderr, "%s\n", "input stream isn't exist");
-        return NULL;
-    }
-
-    if (is == stdin) {
-        char* result = malloc_read(is);
-        if (unlikely(!result)) {
-            fprintf(stderr, "%s\n", "Error: malloc_read");
-            return NULL;
-        }
-        return result;
-    }
-
-    char* result = mmap_read(is);
-    if  (unlikely(!result)) {
-        fprintf(stderr, "%s\n", "Error: mmap_read");
-        return NULL;
-    }
-
-    return result;
-}
-
-*/
-
-int do_smth(char* str, long int* result) {
+int tone_counter(char* str, long int* result) {
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: input stream isn't exist");
         return -1;
     }
 
     long int tone = 0;
-
     do {
-        // if (*(str + 1) == ')') {
-        //     tone++;
-        // }
-        // if (*(str + 1) == '(') {
-        //     tone--;
-        // }
         str = strchr(str, ':');
-        fprintf(stdout, "%s\n", str);
+        if (!str)
+            break;
+
+        if (*(str + 1) == ')') {
+            tone++;
+        }
+        if (*(str + 1) == '(') {
+            tone--;
+        }
     } while (str++);
-
     *result = tone;
-
-    fprintf(stdout, "%ld\n", *result);
 
     return 0;
 }
 
-int main_workflow_malloc(FILE* is) {
+int main_workflow_malloc(FILE* is, long int* tone) {
     char* str = malloc_read(is);
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
         return -1;
     }
 
-    long int tone;
-    do_smth(str, &tone);
+    tone_counter(str, tone);
 
     free(str);
 
     return 0;
 }
 
-int main_workflow_mmap(FILE* is) {
+int main_workflow_mmap(FILE* is, long int* tone) {
     struct stat statbuf;
     int fd = fileno(is);
     if (unlikely(error_handler("fileno"))) {
@@ -159,13 +107,33 @@ int main_workflow_mmap(FILE* is) {
         return -1;
     }
 
-    long int tone;
-    do_smth(str, &tone);
+    tone_counter(str, tone);
 
     munmap(str, statbuf.st_size);
     if (unlikely(error_handler("munmap"))) {
         return -1;
     }
 
+    return 0;
+}
+
+int main_workflow(FILE* is, long int* tone) {
+    if (unlikely(!is)) {
+        fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
+        return -1;
+    }
+
+    if (is == stdin) {
+        if (main_workflow_malloc(is, tone)) {
+            fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
+            return -1;
+        }
+        return 0;
+    }
+
+    if (main_workflow_mmap(is, tone)) {
+        fprintf(stderr, "%s\n", "Error: main_workflow_mmap");
+        return -1;
+    }
     return 0;
 }
