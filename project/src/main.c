@@ -7,59 +7,31 @@
 #define NANOSECONDS 1000000000.0
 
 int main(int argc, char** argv) {
-    fprintf(stdout, "%s\n", "Hello, World");
-
-    // test_foo();
-
-    // char* test = readfile(stdin);
-    // fprintf(stdout, "%s\n", test);
-    // free(test);
-
     FILE* f = fopen("../test1.dat", "r");
-    // char* test = readfile(f);
-    // fprintf(stdout, "%s\n", test);
-
     long int tone = 0;
 
-//---------------------
+    struct timespec start_in_series, finish_in_series, start_in_parallel, finish_in_parallel;
 
-    struct timespec start, finish, start_parallel, finish_parallel;
-
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    clock_gettime(CLOCK_MONOTONIC, &start_in_series);
     main_workflow(f, &tone);
-    fprintf(stderr, "%ld\n", tone);
+    clock_gettime(CLOCK_MONOTONIC, &finish_in_series);
+    fprintf(stdout, "%ld\n", tone);
+
+    double time = (finish_in_series.tv_sec - start_in_series.tv_sec);
+    time += (finish_in_series.tv_nsec - start_in_series.tv_nsec) / NANOSECONDS;
+    fprintf(stdout, "Parcer in series: %lf\n", time);
 
 
-    clock_gettime(CLOCK_MONOTONIC, &finish);
-
-    double time = (finish.tv_sec - start.tv_sec);
-
-    time += (finish.tv_nsec - start.tv_nsec) / NANOSECONDS;
-
-    printf("Время выполнения последовательного алгоритма:%lf\n", time);
-
-   clock_gettime(CLOCK_MONOTONIC, &start_parallel);
-
+    tone = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start_in_parallel);
     pthread_main_workflow(f, &tone);
+    clock_gettime(CLOCK_MONOTONIC, &finish_in_parallel);
+    fprintf(stdout, "%ld\n", tone);
 
-    clock_gettime(CLOCK_MONOTONIC, &finish_parallel);
-
-    double time_parallel = (finish_parallel.tv_sec - start_parallel.tv_sec);
-
-    time_parallel += (finish_parallel.tv_nsec - start_parallel.tv_nsec) / NANOSECONDS;
-
-    printf("Время выполнения параллельного алгоритма:%lf\n", time_parallel);
-
-
-
-//--------------------    
-
+    time = (finish_in_parallel.tv_sec - start_in_parallel.tv_sec);
+    time += (finish_in_parallel.tv_nsec - start_in_parallel.tv_nsec) / NANOSECONDS;
+    fprintf(stdout, "Parcer in parallel: %lf\n", time);
+ 
     fclose(f);
-
-    // fprintf(stdout, "%ld\n", tone);
-    fprintf(stdout, "%s\n", "finish");
-
-    // pthread_exit(0);
-
     return 0;
 }

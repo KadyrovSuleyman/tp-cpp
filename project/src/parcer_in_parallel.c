@@ -88,42 +88,19 @@ int error_handler(const char* invalid_func) {
 
 
 //---------------------
-
-// typedef struct {
-//     char* str;
-//     size_t str_len;
-//     _Atomic long int* result;
-// } Arg;
-
 typedef struct {
     char* str;
     size_t str_len;
     long int result;
 } Arg;
+//---------------------
 
 
-
-void* atomic_tone_counter(void* arg) {
-
-    // int errflag;
-    // errflag = pthread_detach(pthread_self());
-    // if (errflag) {
-    //     fprintf(stderr, "%s\n", "Error: pthread_detach");
-    //     return NULL;
-    // }
-
-    fprintf(stderr, "%s\n", "start");
-
-    // Arg* arg1 = (Arg*)arg;
-    // char* str = arg1->str;
-    // size_t str_len = arg1->str_len;
-    // _Atomic long int* result = arg1->result;
-
-    Arg* arg1 = (Arg*)arg;
-    char* str = arg1->str;
-    size_t str_len = arg1->str_len;
-    long int result = arg1->result;
-
+void* pthread_tone_counter(void* _arg) {
+    Arg* arg = (Arg*)_arg;
+    char* str = arg->str;
+    size_t str_len = arg->str_len;
+    long int result = arg->result;
 
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: input stream isn't exist");
@@ -131,19 +108,13 @@ void* atomic_tone_counter(void* arg) {
         // return -1;
     }
 
-    // fprintf(stderr, "%s\n", "dsfsd");
-    // fprintf(stderr, "%s\n", str);
-
-
-
     char* str_start = str;
     long int tone = 0;
     do {
         str = strchr(str, ':');
-        if (!str || ((str - str_start) >= str_len))
-        // if (!str)
+        if (!str || ((str - str_start) >= str_len)) {
             break;
-
+        }
         if (*(str + 1) == ')') {
             tone++;
         }
@@ -153,20 +124,38 @@ void* atomic_tone_counter(void* arg) {
     } while (str++);
 
     result = tone;
+    arg->str = str;
+    arg->str_len = str_len;
+    arg->result = result;
 
-    arg1->str = str;
-    arg1->str_len = str_len;
-    arg1->result = result;
-
-
-    arg = (void*)arg1;
-
-    fprintf(stderr, "%ld\n", arg1->result);
+    _arg = (void*)arg;
 
     return NULL;
 }
 
+int threads_exec(char* str, long int* tone) {
+    int num_cores = get_num_cores();
+    size_t pth_str_len = strlen(str) / num_cores;
 
+    pthread_t thread[num_cores];
+    int error[num_cores];
+    Arg args[num_cores];
+
+    for (size_t i = 0; i < num_cores; ++i) {
+        args[i].str = str + (i * pth_str_len);
+        args[i].str_len = pth_str_len;
+        args[i].result = 0;
+
+        error[i] = pthread_create(&thread[i], NULL, pthread_tone_counter, (void*)&args[i]);
+    }
+
+    for (size_t i = 0; i < num_cores; ++i) {
+        pthread_join(thread[i], NULL);
+        *tone += args[i].result;
+    }
+
+    return 0;
+}
 
 int pthread_main_workflow_malloc(FILE* is, long int* tone) {
     char* str = malloc_read(is);
@@ -175,29 +164,7 @@ int pthread_main_workflow_malloc(FILE* is, long int* tone) {
         return -1;
     }
 
-    //----------------
-
-    _Atomic long int tone_atomic = 0;
-    int num_cores = get_num_cores();
-    size_t pth_str_len = strlen(str) / num_cores;
-
-    int errflag[4];
-    pthread_t thread[4];
-
-    // for (size_t i = 0; i < num_cores; ++i) {
-    //     // atomic_tone_counter(str + (i * pth_str_len), pth_str_len, &tone_atomic);
-    //     errflag[i] = pthread_create(&thread[i], NULL, atomic_tone_counter, NULL);
-    // }
-
-    // atomic_tone_counter(str, pth_str_len, &tone_atomic);
-
-
-    
-
-    *tone = tone_atomic;
-
-    //-----------------
-
+    threads_exec(str, tone);
     free(str);
 
     return 0;
@@ -222,135 +189,7 @@ int pthread_main_workflow_mmap(FILE* is, long int* tone) {
         return -1;
     }
 
-//     //---------------
-
-//     fprintf(stdout, "%s\n", "Hollow");
-
-//     _Atomic long int tone_atomic = 0;
-//     int num_cores = get_num_cores();
-//     size_t pth_str_len = strlen(str) / num_cores;
-
-//     // fprintf(stderr, "%zu\n", pth_str_len);
-
-//     // int errflag[4];
-//     // pthread_t thread[4];
-
-//     // for (size_t i = 0; i < num_cores; ++i) {
-//     //     // atomic_tone_counter(str + (i * pth_str_len), pth_str_len, &tone_atomic);
-//     //     Arg arg = {str + (i * pth_str_len), pth_str_len, &tone_atomic};
-
-//     //     errflag[i] = pthread_create(&thread[i], NULL, atomic_tone_counter, (void*)arg);
-//     // }
-
-//     // atomic_tone_counter(str, pth_str_len, &tone_atomic);
-
-// //     Arg* arg[4];
-// // for (size_t i = 0; i < num_cores; ++i) {
-// //     arg[i] = (Arg*)malloc(sizeof(Arg));
-// //     arg[i]->str = str;
-// //     arg[i]->str_len = pth_str_len;
-// //     arg[i]->result = &tone_atomic;
-// // }
-//     _Atomic long int tone_atomic0 = 0;
-//     Arg* arg0 = (Arg*)malloc(sizeof(Arg));
-//     arg0->str = str + (0 * pth_str_len);
-//     arg0->str_len = pth_str_len;
-//     arg0->result = &tone_atomic;
-
-//     _Atomic long int tone_atomic1 = 0;
-//         Arg* arg1 = (Arg*)malloc(sizeof(Arg));
-//     arg1->str = str + (1 * pth_str_len);
-//     arg1->str_len = pth_str_len;
-//     arg1->result = &tone_atomic;
-
-//     _Atomic long int tone_atomic2 = 0;
-//         Arg* arg2 = (Arg*)malloc(sizeof(Arg));
-//     arg2->str = str + (2 * pth_str_len);
-//     arg2->str_len = pth_str_len;
-//     arg2->result = &tone_atomic;
-
-//     _Atomic long int tone_atomic3 = 0;
-//         Arg* arg3 = (Arg*)malloc(sizeof(Arg));
-//     arg3->str = str + (3 * pth_str_len);
-//     arg3->str_len = pth_str_len;
-//     arg3->result = &tone_atomic;
-
-//     // fprintf(stderr, "%s\n", arg->str);
-
-//     // void* arg1 = (void*)arg;
-
-//     // atomic_tone_counter(arg);
-
-//     // fprintf(stderr, "%ld\n", *arg->result);
-
-
-//     pthread_t thread0[4];
-//     int errflag0[0];
-
-
-//     errflag0[0]  = pthread_create(&thread0[0], NULL, &atomic_tone_counter, arg0);
-//     errflag0[1] = pthread_create(&thread0[1], NULL, &atomic_tone_counter, arg1);
-//     errflag0[2] = pthread_create(&thread0[2], NULL, &atomic_tone_counter, arg2);
-//     errflag0[3] = pthread_create(&thread0[3], NULL, &atomic_tone_counter, arg3);
-
-//     pthread_join(thread0[0], NULL);
-//     pthread_join(thread0[1], NULL);
-//     pthread_join(thread0[2], NULL);
-//     pthread_join(thread0[3], NULL);
-
-//     tone_atomic = tone_atomic0 + tone_atomic1 + tone_atomic2 + tone_atomic3;
-
-//     fprintf(stderr, "%ld\n", tone_atomic);
-
-
-
-//     free(arg0);
-//     free(arg1);
-//     free(arg2);
-//     free(arg3);
-
-
-
-//     // int errflag0 = pthread_create(&thread[1], NULL, atomic_tone_counter, arg1);
-//     // atomic_tone_counter(arg);
-    
-
-//     // *tone = tone_atomic;
-
-//     //----------------
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    pthread_t thread[4];
-    int error[4];
-
-    Arg args[4];
-
-    int num_cores = get_num_cores();
-    size_t pth_str_len = strlen(str) / num_cores;
-
-    for (size_t i = 0; i < num_cores; ++i) {
-
-        args[i].str = str + (i * pth_str_len);
-        args[i].str_len = pth_str_len;
-        args[i].result = 0;
-
-        error[i] = pthread_create(&thread[i], NULL, atomic_tone_counter, (void*)&args[i]);
-
-
-    }
-
-    for (size_t i = 0; i < num_cores; ++i) {
-        pthread_join(thread[i], NULL);
-    }
-
-    fprintf(stderr, "%ld\n", args[0].result);
-
-
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    threads_exec(str, tone);
 
     munmap(str, statbuf.st_size);
     if (unlikely(error_handler("munmap"))) {
@@ -360,7 +199,6 @@ int pthread_main_workflow_mmap(FILE* is, long int* tone) {
     return 0;
 
 }
-
 
 int pthread_main_workflow(FILE* is, long int* tone) {
     if (unlikely(!is)) {
@@ -381,8 +219,4 @@ int pthread_main_workflow(FILE* is, long int* tone) {
         return -1;
     }
     return 0;
-
-
-
-
 }
