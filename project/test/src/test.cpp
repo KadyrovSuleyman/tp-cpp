@@ -11,6 +11,8 @@ TEST(in_serial_mmap_test, main_workflow) {
     main_workflow(f, &tone);
     fprintf(stdout, "%ld\n", tone);
     fclose(f);
+
+    ASSERT_EQ(tone, -3);
 }
 
 // TEST(in_serial_malloc_test, main_workflow) {
