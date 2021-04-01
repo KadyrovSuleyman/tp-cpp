@@ -140,10 +140,10 @@ int threads_exec(char* str, long int* tone) {
     for (size_t i = 1; i < num_cores; ++i) {
         if (*(args[i].str - 1) == ':') {
             if (*(args[i].str) == ')') {
-                *tone++;
+                (*tone)++;
             }
             if (*(args[i].str) == '(') {
-                *tone--;
+                (*tone)--;
             }            
         }
     }
