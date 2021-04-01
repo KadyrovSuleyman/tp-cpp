@@ -128,7 +128,7 @@ int main_workflow_mmap(FILE* is, long int* tone) {
 
 int main_workflow(FILE* is, long int* tone) {
     if (unlikely(!is)) {
-        fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
+        fprintf(stderr, "%s\n", "Error: input stream isn't exist");
         return -1;
     }
 
