@@ -91,7 +91,11 @@ int main_workflow_malloc(FILE* is, long int* tone) {
         return -1;
     }
 
-    tone_counter(str, tone);
+    if (unlikely(tone_counter(str, tone))) {
+        fprintf(stderr, "%s\n", "Error: tone_counter");
+        free(str);
+        return -1;
+    }
 
     free(str);
 
@@ -119,7 +123,10 @@ int main_workflow_mmap(FILE* is, long int* tone) {
         return -1;
     }
 
-    tone_counter(str, tone);
+    if (unlikely(tone_counter(str, tone))) {
+        fprintf(stderr, "%s\n", "Error: tone_counter");
+        return -1;
+    }
 
     munmap(str, statbuf.st_size);
     if (unlikely(error_handler("munmap"))) {

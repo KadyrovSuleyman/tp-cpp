@@ -88,6 +88,12 @@ int error_handler(const char* invalid_func) {
 }
 
 void* pthread_tone_counter(void* _arg) {
+    if (unlikely(!_arg)) {
+        fprintf(stderr, "%s\n", "Error: pthread_tone_counter");
+        errno = !errno;
+        return NULL;
+    }
+
     Arg* arg = (Arg*)_arg;
     char* str = arg->str;
     size_t str_len = arg->str_len;
@@ -95,8 +101,8 @@ void* pthread_tone_counter(void* _arg) {
 
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: input stream isn't exist");
+        errno = !errno;
         return NULL;
-        // return -1;
     }
 
     char* str_start = str;
@@ -127,8 +133,23 @@ int threads_exec(char* str, long int* tone) {
     size_t pth_str_len = strlen(str) / num_cores;
 
     pthread_t* thread = (pthread_t*)malloc(sizeof(pthread_t) * num_cores);
+    if (unlikely(error_handler("malloc"))) {
+        free(thread);
+        return -1;
+    }
     int* error = (int*)malloc(sizeof(int) * num_cores);
+    if (unlikely(error_handler("malloc"))) {
+        free(thread);
+        free(error);
+        return -1;
+    }
     Arg* args = (Arg*)malloc(sizeof(Arg) * num_cores);
+    if (unlikely(error_handler("malloc"))) {
+        free(thread);
+        free(error);
+        free(args);
+        return -1;
+    }
 
     for (size_t i = 0; i < num_cores; ++i) {
         args[i].str = str + (i * pth_str_len);
@@ -150,7 +171,7 @@ int threads_exec(char* str, long int* tone) {
 
     for (size_t i = 0; i < num_cores; ++i) {
         error[i] = pthread_create(&thread[i], NULL, pthread_tone_counter, (void*)&args[i]);
-        if (error[i]) {
+        if (error[i] || errno) {
             fprintf(stderr, "%s\n", "Error: pthread_create");
             free(thread);
             free(error);
@@ -180,7 +201,11 @@ int pthread_main_workflow_malloc(FILE* is, long int* tone) {
         fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
         return -1;
     }
-    threads_exec(str, tone);
+    if (unlikely(threads_exec(str, tone))) {
+        fprintf(stderr, "%s\n", "Error: threads_exec");
+        free(str);
+        return -1;
+    }
     free(str);
     return 0;
 }
@@ -206,7 +231,10 @@ int pthread_main_workflow_mmap(FILE* is, long int* tone) {
         return -1;
     }
 
-    threads_exec(str, tone);
+    if (unlikely(threads_exec(str, tone))) {
+        fprintf(stderr, "%s\n", "Error: threads_exec");
+        return -1;
+    }
 
     munmap(str, statbuf.st_size);
     if (unlikely(error_handler("munmap"))) {
