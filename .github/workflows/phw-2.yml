@@ -48,7 +48,7 @@ jobs:
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
-          ./build/project/tests/mytest
+          ./build/project/test/mytest
 
       - name: Code coverage
         shell: bash
