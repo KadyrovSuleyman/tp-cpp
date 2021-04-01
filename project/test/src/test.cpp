@@ -62,18 +62,18 @@ TEST(compare_methods, main_workflow) {
     ASSERT_EQ(tone_in_series, tone_in_parallel);
 }
 
-// TEST(empty_file, main_workflow) {
-//     FILE* f = fopen("./project/test/data/case_3/test.dat", "r");
-//     long int tone_in_series = 0;
-//     long int tone_in_parallel = 0;
-//     pthread_main_workflow(f, &tone_in_parallel);
-//     main_workflow(f, &tone_in_series);
+TEST(empty_file, main_workflow) {
+    FILE* f = fopen("./project/test/data/case_3/test.dat", "r");
+    long int tone_in_series = 0;
+    long int tone_in_parallel = 0;
+    pthread_main_workflow(f, &tone_in_parallel);
+    main_workflow(f, &tone_in_series);
 
-//     ASSERT_TRUE(pthread_main_workflow(f, &tone_in_parallel));
-//     ASSERT_TRUE(main_workflow(f, &tone_in_series));
+    ASSERT_TRUE(pthread_main_workflow(f, &tone_in_parallel));
+    ASSERT_TRUE(main_workflow(f, &tone_in_series));
 
-//     fclose(f);
-// }
+    fclose(f);
+}
 
 TEST(single_smile, main_workflow) {
     FILE* f = fopen("./project/test/data/case_4/test.dat", "r");
