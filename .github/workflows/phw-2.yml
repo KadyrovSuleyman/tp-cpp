@@ -44,14 +44,14 @@ jobs:
       #     make &&
       #     valgrind --leak-check=full --track-origins=yes ./project/main
 
-          # ./build/project/test/mytest
+          
 
 
       - name: Tests
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
-          ls
+          ./build/project/test/mytest
 
       # - name: Code coverage
       #   shell: bash
