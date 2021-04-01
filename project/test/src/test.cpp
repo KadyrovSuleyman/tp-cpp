@@ -28,13 +28,14 @@ TEST(in_parallel_mmap_test, main_workflow) {
     fprintf(stdout, "%ld\n", tone);
     fclose(f);
 
-    ASSERT_EQ(tone, -3); 
+    
 }
 
 TEST(in_parallel_malloc_test, main_workflow) {
     long int tone = 0;
     pthread_main_workflow(stdin, &tone);
-    fprintf(stdout, "%ld\n", tone);
+
+    ASSERT_EQ(tone, -3); 
 }
 
 
