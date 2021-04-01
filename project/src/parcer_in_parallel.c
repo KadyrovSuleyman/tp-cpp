@@ -125,7 +125,7 @@ int threads_exec(char* str, long int* tone) {
 
     pthread_t* thread = (pthread_t*)malloc(sizeof(pthread_t) * num_cores);
     int* error = (int*)malloc(sizeof(int) * num_cores);
-    Arg* args = (Agr*)malloc(sizeof(Arg) * num_cores);
+    Arg* args = (Arg*)malloc(sizeof(Arg) * num_cores);
 
     for (size_t i = 0; i < num_cores; ++i) {
         args[i].str = str + (i * pth_str_len);
