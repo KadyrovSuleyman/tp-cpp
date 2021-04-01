@@ -37,10 +37,9 @@ TEST(in_parallel_mmap_test, pthread_main_workflow) {
 
 TEST(compare_methods, main_workflow) {
     FILE* f = fopen("./project/test/data/case_2/test.dat", "r");
-    long int tone_in_series = 0;
-
     struct timespec start_in_series, finish_in_series, start_in_parallel, finish_in_parallel;
-
+    
+    long int tone_in_series = 0;
     clock_gettime(CLOCK_MONOTONIC, &start_in_series);
     main_workflow(f, &tone_in_series);
     clock_gettime(CLOCK_MONOTONIC, &finish_in_series);
@@ -52,7 +51,7 @@ TEST(compare_methods, main_workflow) {
     long int tone_in_parallel = 0;
     clock_gettime(CLOCK_MONOTONIC, &start_in_parallel);
     pthread_main_workflow(f, &tone_in_parallel);
-    clock_gettime(tone_in_parallel, &finish_in_parallel);
+    clock_gettime(CLOCK_MONOTONIC, &finish_in_parallel);
 
     double time_in_parallel = (finish_in_parallel.tv_sec - start_in_parallel.tv_sec);
     time_in_parallel += (finish_in_parallel.tv_nsec - start_in_parallel.tv_nsec) / NANOSECONDS;
