@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Static code analysis
-      #   shell: bash
-      #   run: ./linters/run.sh
+      - name: Static code analysis
+        shell: bash
+        run: ./linters/run.sh
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -43,9 +43,6 @@ jobs:
         run: |
           make &&
           valgrind --leak-check=full --track-origins=yes ./project/main
-
-          ./build/project/test/mytest
-          ls && cd ./project/test && ls
 
       - name: Tests
         shell: bash
