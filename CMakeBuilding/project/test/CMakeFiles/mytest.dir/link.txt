@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++0x -Wall -Werror -Wextra -Wpedantic -ggdb3 -pthread -fprofile-arcs -ftest-coverage -fPIC   CMakeFiles/mytest.dir/src/test.cpp.o  -o mytest  -Wl,-rpath,/home/kadyrov_suleyman/tp-cpp/CMakeBuilding/project ../libparcer_in_series.a ../libparcer_in_parallel.so ../../lib/libgtest.a -lpthread -pthread 
