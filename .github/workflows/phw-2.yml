@@ -50,9 +50,10 @@ jobs:
       #   run: |
       #     ./build/project/tests/mytest
 
-      # - name: Code coverage
-      #   shell: bash
-      #   working-directory: ${{github.workspace}}/build
-      #   run: |
-      #     gcov ./project/CMakeFiles/matrix.dir/src/matrix.c.gcda
+      - name: Code coverage
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          gcov ./project/CMakeFiles/parcer_in_parallel.dir/src/parcer_in_parallel.c.gcda 
+          project/CMakeFiles/parcer_in_series.dir/src/parcer_in_series.c.gcda
 

@@ -8,7 +8,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)        
 
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -Wall -Werror -Wextra -Wpedantic -ggdb3 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -Wall -Werror -Wextra -Wpedantic -ggdb3 -pthread -fprofile-arcs -ftest-coverage -fPIC")
 
 add_subdirectory(project)
 
