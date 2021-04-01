@@ -27,11 +27,11 @@ TEST(in_parallel_mmap_test, main_workflow) {
     fclose(f);    
 }
 
-TEST(in_parallel_malloc_test, main_workflow) {
-    long int tone = 0;
-    pthread_main_workflow(stdin, &tone);
-    fprintf(stdout, "%ld\n", tone);
-}
+// TEST(in_parallel_malloc_test, main_workflow) {
+//     long int tone = 0;
+//     pthread_main_workflow(stdin, &tone);
+//     fprintf(stdout, "%ld\n", tone);
+// }
 
 
 int main(int argc, char** argv) {
