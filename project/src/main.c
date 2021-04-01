@@ -7,7 +7,7 @@
 #define NANOSECONDS 1000000000.0
 
 int main(int argc, char** argv) {
-    FILE* f = fopen("../test1.dat", "r");
+    FILE* f = fopen("../test.dat", "r");
     long int tone = 0;
 
     struct timespec start_in_series, finish_in_series, start_in_parallel, finish_in_parallel;
