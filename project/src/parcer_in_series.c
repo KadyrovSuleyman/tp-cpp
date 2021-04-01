@@ -17,7 +17,7 @@ char* malloc_read(FILE* is) {
     size_t str_len = START_STRING_LENGTH;
     char* result = (char*)malloc(sizeof(char) * str_len);
     if (errno == ENOTTY) {
-            errno = 0;
+        errno = 0;
     }
     if (unlikely(error_handler("malloc"))) {
         free(result);
@@ -33,6 +33,9 @@ char* malloc_read(FILE* is) {
             j <<= 1;
 
             result = (char*)realloc(result, sizeof(char) * str_len);
+            if (errno == ENOTTY) {
+                errno = 0;
+            }
             if (unlikely(error_handler("realloc"))) {
                 free(result);
                 return NULL;

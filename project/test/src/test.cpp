@@ -13,11 +13,11 @@ TEST(in_serial_mmap_test, main_workflow) {
     fclose(f);
 }
 
-TEST(in_serial_malloc_test, main_workflow) {
-    long int tone = 0;
-    main_workflow(stdin, &tone);
-    fprintf(stdout, "%ld\n", tone);
-}
+// TEST(in_serial_malloc_test, main_workflow) {
+//     long int tone = 0;
+//     main_workflow(stdin, &tone);
+//     fprintf(stdout, "%ld\n", tone);
+// }
 
 TEST(in_parallel_mmap_test, main_workflow) {
     FILE* f = fopen("../test1.dat", "r");
