@@ -69,8 +69,8 @@ TEST(empty_file, main_workflow) {
     pthread_main_workflow(f, &tone_in_parallel);
     main_workflow(f, &tone_in_series);
 
-    ASSERT_TRUE(pthread_main_workflow(f, &tone_in_parallel));
-    ASSERT_TRUE(main_workflow(f, &tone_in_series));
+    ASSERT_EQ(tone_in_series, 0);
+    ASSERT_EQ(tone_in_parallel, 0);
 
     fclose(f);
 }
