@@ -52,24 +52,24 @@ jobs:
         working-directory: ${{github.workspace}}
         run: |
           echo "adadsfadfs
-adfadfs
-asdf
-asdf
-a
-df
-adf
+          adfadfs
+          asdf
+          asdf
+          a
+          df
+          adf
 
-asdf
-asd
-f
-asdf
-asd
-fasdf
-a
-sdf
-:::)))))))
-^:(:(:()))
-:()
+          asdf
+          asd
+          f
+          asdf
+          asd
+          fasdf
+          a
+          sdf
+          :::)))))))
+          ^:(:(:()))
+          :()
           "
           ./build/project/test/mytest
 
