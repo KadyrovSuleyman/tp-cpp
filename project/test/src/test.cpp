@@ -31,13 +31,6 @@ TEST(in_parallel_mmap_test, main_workflow) {
     
 }
 
-TEST(in_parallel_malloc_test, main_workflow) {
-    long int tone = 0;
-    pthread_main_workflow(stdin, &tone);
-
-    ASSERT_EQ(tone, -3); 
-}
-
 
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
