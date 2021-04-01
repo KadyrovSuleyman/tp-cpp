@@ -19,7 +19,7 @@ TEST(in_series_malloc_test, main_workflow) {
     long int tone = 0;
     main_workflow(stdin, &tone);
     fprintf(stdout, "%ld\n", tone);
-    
+
     ASSERT_EQ(tone, -3); 
 }
 
