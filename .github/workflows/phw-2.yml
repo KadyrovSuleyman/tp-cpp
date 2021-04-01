@@ -48,6 +48,15 @@ jobs:
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
+          echo "!adadsfadfs adfadfs asd f
+          asdf
+          asd
+          fasdf
+          a
+          sdf
+          :::)))))))
+          ^:(:(:()))
+          :()" |
           ./build/project/test/mytest
 
       - name: Code coverage
