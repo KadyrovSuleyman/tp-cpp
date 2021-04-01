@@ -25,7 +25,6 @@ TEST(in_parallel_mmap_test, main_workflow) {
     FILE* f = fopen("./project/test/data/case_1/test.dat", "r");
     long int tone = 0;
     pthread_main_workflow(f, &tone);
-    fprintf(stdout, "%ld\n", tone);
     fclose(f);
 
     ASSERT_EQ(tone, -3); 
