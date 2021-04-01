@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Static code analysis
-      #   shell: bash
-      #   run: ./linters/run.sh
+      - name: Static code analysis
+        shell: bash
+        run: ./linters/run.sh
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -32,18 +32,17 @@ jobs:
         shell: bash
         run: cmake --build . --config $BUILD_TYPE
 
-      # - name: Valgring install
-      #   working-directory: ${{github.workspace}}
-      #   shell: bash
-      #   run: sudo apt install -y valgrind
+      - name: Valgring install
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: sudo apt install -y valgrind
 
-      # - name: Valgring check
-      #   shell: bash
-      #   working-directory: ${{github.workspace}}/build
-      #   run: |
-      #     make &&
-      #     echo 3 3 1 2 3 4 5 6 7 8 9 2 2 |
-      #     valgrind --leak-check=full -s ./project/main
+      - name: Valgring check
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          make &&
+          valgrind --leak-check=full --track-origins=yes ./project/main
 
       # - name: Tests
       #   shell: bash
