@@ -44,11 +44,30 @@ jobs:
           make &&
           valgrind --leak-check=full --track-origins=yes ./project/main
 
-      # - name: Tests
-      #   shell: bash
-      #   working-directory: ${{github.workspace}}
-      #   run: |
-      #     ./build/project/tests/mytest
+      - name: Tests
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          echo !adadsfadfs
+          adfadfs
+          asdf
+          asdf
+          a
+          df
+          adf
+
+          asdf
+          asd
+          f
+          asdf
+          asd
+          fasdf
+          a
+          sdf
+          :::)))))))
+          ^:(:(:()))
+          :()
+          ./build/project/tests/mytest
 
       - name: Code coverage
         shell: bash

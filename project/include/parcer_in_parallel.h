@@ -1,7 +1,6 @@
 #ifndef PROJECT_INCLUDE_PARCER_IN_PARALLEL_H_
 #define PROJECT_INCLUDE_PARCER_IN_PARALLEL_H_
 
-#include <stdatomic.h>
 #include <pthread.h>
 
 #include <stdio.h>
