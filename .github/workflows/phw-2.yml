@@ -69,8 +69,7 @@ jobs:
           sdf
           :::)))))))
           ^:(:(:()))
-          :()
-          "
+          :()" |
           ./build/project/test/mytest
 
       # - name: Code coverage
