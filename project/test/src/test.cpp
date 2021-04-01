@@ -21,13 +21,13 @@ TEST(in_series_mmap_test, main_workflow) {
 //     fprintf(stdout, "%ld\n", tone);
 // }
 
-// TEST(in_parallel_mmap_test, main_workflow) {
-//     FILE* f = fopen("../test1.dat", "r");
-//     long int tone = 0;
-//     pthread_main_workflow(f, &tone);
-//     fprintf(stdout, "%ld\n", tone);
-//     fclose(f);    
-// }
+TEST(in_parallel_mmap_test, main_workflow) {
+    FILE* f = fopen("./project/test/data/case_1/test.dat", "r");
+    long int tone = 0;
+    pthread_main_workflow(f, &tone);
+    fprintf(stdout, "%ld\n", tone);
+    fclose(f);    
+}
 
 // TEST(in_parallel_malloc_test, main_workflow) {
 //     long int tone = 0;

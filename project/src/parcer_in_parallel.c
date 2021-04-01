@@ -41,6 +41,9 @@ int get_num_cores() {
 char* malloc_read(FILE* is) {
     size_t str_len = START_STRING_LENGTH;
     char* result = (char*)malloc(sizeof(char) * str_len);
+    if (errno == ENOTTY) {
+        errno = 0;
+    }
     if (unlikely(error_handler("malloc"))) {
         free(result);
         return NULL;
@@ -156,6 +159,9 @@ int threads_exec(char* str, long int* tone) {
 
 int pthread_main_workflow_malloc(FILE* is, long int* tone) {
     char* str = malloc_read(is);
+    if (errno == ENOTTY) {
+        errno = 0;
+    }
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
         return -1;
@@ -168,6 +174,9 @@ int pthread_main_workflow_malloc(FILE* is, long int* tone) {
 int pthread_main_workflow_mmap(FILE* is, long int* tone) {
     struct stat statbuf;
     int fd = fileno(is);
+    if (errno == ENOTTY) {
+        errno = 0;
+    }
     if (unlikely(error_handler("fileno"))) {
         return -1;
     }
