@@ -134,7 +134,21 @@ int threads_exec(char* str, long int* tone) {
         args[i].str = str + (i * pth_str_len);
         args[i].str_len = pth_str_len;
         args[i].result = 0;
+    }
+    args[num_cores - 1].str_len = strlen(str) - (3 * pth_str_len);
 
+    for (size_t i = 1; i < num_cores; ++i) {
+        if (*(args[i].str - 1) == ':') {
+            if (*(args[i].str) == ')') {
+                *tone++;
+            }
+            if (*(args[i].str) == '(') {
+                *tone--;
+            }            
+        }
+    }
+
+    for (size_t i = 0; i < num_cores; ++i) {
         error[i] = pthread_create(&thread[i], NULL, pthread_tone_counter, (void*)&args[i]);
         if (error[i]) {
             fprintf(stderr, "%s\n", "Error: pthread_create");
