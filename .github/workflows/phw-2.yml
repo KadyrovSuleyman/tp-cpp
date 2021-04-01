@@ -69,7 +69,7 @@ jobs:
           sdf
           :::)))))))
           ^:(:(:()))
-          :()" |
+          :()" &&
           echo "adadsfadfs
           adfadfs
           asdf
