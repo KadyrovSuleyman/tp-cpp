@@ -6,7 +6,7 @@ extern "C" {
 }
 
 TEST(in_serial_mmap_test, main_workflow) {
-    FILE* f = fopen("../test.dat", "r");
+    FILE* f = fopen(".../test.dat", "r");
     long int tone = 0;
     main_workflow(f, &tone);
     fprintf(stdout, "%ld\n", tone);
