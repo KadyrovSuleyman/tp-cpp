@@ -7,7 +7,7 @@
 #define NANOSECONDS 1000000000.0
 
 int main(int argc, char** argv) {
-    FILE* f = fopen("../test.dat", "r");
+    FILE* f = fopen("../test1.dat", "r");
     long int tone = 0;
 
     struct timespec start_in_series, finish_in_series, start_in_parallel, finish_in_parallel;
@@ -21,7 +21,6 @@ int main(int argc, char** argv) {
     time += (finish_in_series.tv_nsec - start_in_series.tv_nsec) / NANOSECONDS;
     fprintf(stdout, "Parcer in series: %lf\n", time);
 
-
     tone = 0;
     clock_gettime(CLOCK_MONOTONIC, &start_in_parallel);
     pthread_main_workflow(f, &tone);
@@ -31,7 +30,7 @@ int main(int argc, char** argv) {
     time = (finish_in_parallel.tv_sec - start_in_parallel.tv_sec);
     time += (finish_in_parallel.tv_nsec - start_in_parallel.tv_nsec) / NANOSECONDS;
     fprintf(stdout, "Parcer in parallel: %lf\n", time);
- 
+
     fclose(f);
     return 0;
 }

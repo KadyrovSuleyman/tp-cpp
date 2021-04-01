@@ -1,33 +1,34 @@
- 
 #ifndef PROJECT_INCLUDE_PARCER_IN_PARALLEL_H_
 #define PROJECT_INCLUDE_PARCER_IN_PARALLEL_H_
-
-#include "parcer_in_series.h"
 
 #include <stdatomic.h>
 #include <pthread.h>
 
-int pthread_main_workflow_malloc(FILE* is, long int* tone);
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
 
-int pthread_main_workflow(FILE* is, long int* tone);
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <sys/mman.h>
+
+int error_handler(const char* invalid_func);
+void* pthread_tone_counter(void* _arg);
+int threads_exec(char* str, long int* tone);
+char* malloc_read(FILE* is);
+int pthread_main_workflow_malloc(FILE* is, long int* tone);
 int pthread_main_workflow_mmap(FILE* is, long int* tone);
-int pthread_main_workflow_malloc(FILE* is, long int* tone);
+int pthread_main_workflow(FILE* is, long int* tone);
+int get_num_cores();
 
-// #include <stdio.h>
-// #include <errno.h>
-// #include <stdlib.h>
-// #include <string.h>
+typedef struct {
+    char* str;
+    size_t str_len;
+    long int result;
+} Arg;
 
-// #include <sys/types.h>
-// #include <sys/stat.h>
-// #include <unistd.h>
-// #include <sys/mman.h>
 
-// int error_handler(const char* invalid_func);
-// int tone_counter(char* str, long int* result);
-// char* malloc_read(FILE* is);
-// int main_workflow_malloc(FILE* is, long int* tone);
-// int main_workflow_mmap(FILE* is, long int* tone);
-// int main_workflow(FILE* is, long int* tone);
 
 #endif  // PROJECT_INCLUDE_PARCER_IN_PARALLEL_H_

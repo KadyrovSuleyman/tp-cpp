@@ -27,10 +27,10 @@ int get_num_cores() {
     nm[0] = CTL_HW; nm[1] = HW_AVAILCPU;
     sysctl(nm, 2, &count, &len, NULL, 0);
 
-    if(count < 1) {
+    if (count < 1) {
         nm[1] = HW_NCPU;
         sysctl(nm, 2, &count, &len, NULL, 0);
-        if(count < 1) { count = 1; }
+        if (count < 1) { count = 1; }
     }
     return count;
 #else
@@ -84,18 +84,6 @@ int error_handler(const char* invalid_func) {
     return 0;
 }
 
-
-
-
-//---------------------
-typedef struct {
-    char* str;
-    size_t str_len;
-    long int result;
-} Arg;
-//---------------------
-
-
 void* pthread_tone_counter(void* _arg) {
     Arg* arg = (Arg*)_arg;
     char* str = arg->str;
@@ -128,8 +116,6 @@ void* pthread_tone_counter(void* _arg) {
     arg->str_len = str_len;
     arg->result = result;
 
-    _arg = (void*)arg;
-
     return NULL;
 }
 
@@ -137,9 +123,9 @@ int threads_exec(char* str, long int* tone) {
     int num_cores = get_num_cores();
     size_t pth_str_len = strlen(str) / num_cores;
 
-    pthread_t thread[num_cores];
-    int error[num_cores];
-    Arg args[num_cores];
+    pthread_t* thread = (pthread_t*)malloc(sizeof(pthread_t) * num_cores);
+    int* error = (int*)malloc(sizeof(int) * num_cores);
+    Arg* args = (Agr*)malloc(sizeof(Arg) * num_cores);
 
     for (size_t i = 0; i < num_cores; ++i) {
         args[i].str = str + (i * pth_str_len);
@@ -147,12 +133,23 @@ int threads_exec(char* str, long int* tone) {
         args[i].result = 0;
 
         error[i] = pthread_create(&thread[i], NULL, pthread_tone_counter, (void*)&args[i]);
+        if (error[i]) {
+            fprintf(stderr, "%s\n", "Error: pthread_create");
+            free(thread);
+            free(error);
+            free(args);
+            return -1;
+        }
     }
 
     for (size_t i = 0; i < num_cores; ++i) {
         pthread_join(thread[i], NULL);
         *tone += args[i].result;
     }
+
+    free(thread);
+    free(error);
+    free(args);
 
     return 0;
 }
@@ -163,12 +160,9 @@ int pthread_main_workflow_malloc(FILE* is, long int* tone) {
         fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
         return -1;
     }
-
     threads_exec(str, tone);
     free(str);
-
     return 0;
-
 }
 
 int pthread_main_workflow_mmap(FILE* is, long int* tone) {
@@ -197,7 +191,6 @@ int pthread_main_workflow_mmap(FILE* is, long int* tone) {
     }
 
     return 0;
-
 }
 
 int pthread_main_workflow(FILE* is, long int* tone) {
