@@ -45,18 +45,18 @@ TEST(compare_methods, main_workflow) {
     main_workflow(f, &tone_in_series);
     clock_gettime(CLOCK_MONOTONIC, &finish_in_series);
 
-    double time = (finish_in_series.tv_sec - start_in_series.tv_sec);
-    time += (finish_in_series.tv_nsec - start_in_series.tv_nsec) / NANOSECONDS;
-    fprintf(stdout, "Parcer in series: %lf\n", time);
+    double time_in_series = (finish_in_series.tv_sec - start_in_series.tv_sec);
+    time_in_series += (finish_in_series.tv_nsec - start_in_series.tv_nsec) / NANOSECONDS;
+    fprintf(stdout, "Parcer in series: %lf\n", time_in_series);
 
     long int tone_in_parallel = 0;
     clock_gettime(CLOCK_MONOTONIC, &start_in_parallel);
     pthread_main_workflow(f, &tone_in_parallel);
     clock_gettime(tone_in_parallel, &finish_in_parallel);
 
-    time = (finish_in_parallel.tv_sec - start_in_parallel.tv_sec);
-    time += (finish_in_parallel.tv_nsec - start_in_parallel.tv_nsec) / NANOSECONDS;
-    fprintf(stdout, "Parcer in parallel: %lf\n", time);
+    double time_in_parallel = (finish_in_parallel.tv_sec - start_in_parallel.tv_sec);
+    time_in_parallel += (finish_in_parallel.tv_nsec - start_in_parallel.tv_nsec) / NANOSECONDS;
+    fprintf(stdout, "Parcer in parallel: %lf\n", time_in_parallel);
 
     fclose(f);
 
