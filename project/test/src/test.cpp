@@ -9,7 +9,6 @@ TEST(in_series_mmap_test, main_workflow) {
     FILE* f = fopen("./project/test/data/case_1/test.dat", "r");
     long int tone = 0;
     main_workflow(f, &tone);
-    fprintf(stdout, "%ld\n", tone);
     fclose(f);
 
     ASSERT_EQ(tone, -3);
@@ -18,7 +17,6 @@ TEST(in_series_mmap_test, main_workflow) {
 TEST(in_series_malloc_test, main_workflow) {
     long int tone = 0;
     main_workflow(stdin, &tone);
-    fprintf(stdout, "%ld\n", tone);
 
     ASSERT_EQ(tone, -3); 
 }
@@ -33,11 +31,11 @@ TEST(in_parallel_mmap_test, main_workflow) {
     ASSERT_EQ(tone, -3); 
 }
 
-// TEST(in_parallel_malloc_test, main_workflow) {
-//     long int tone = 0;
-//     pthread_main_workflow(stdin, &tone);
-//     fprintf(stdout, "%ld\n", tone);
-// }
+TEST(in_parallel_malloc_test, main_workflow) {
+    long int tone = 0;
+    pthread_main_workflow(stdin, &tone);
+    fprintf(stdout, "%ld\n", tone);
+}
 
 
 int main(int argc, char** argv) {
