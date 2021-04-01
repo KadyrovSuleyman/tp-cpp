@@ -16,6 +16,9 @@ int error_handler(const char* invalid_func) {
 char* malloc_read(FILE* is) {
     size_t str_len = START_STRING_LENGTH;
     char* result = (char*)malloc(sizeof(char) * str_len);
+    if (errno == ENOTTY) {
+            errno = 0;
+    }
     if (unlikely(error_handler("malloc"))) {
         free(result);
         return NULL;
@@ -77,6 +80,9 @@ int tone_counter(char* str, long int* result) {
 
 int main_workflow_malloc(FILE* is, long int* tone) {
     char* str = malloc_read(is);
+    if (errno == ENOTTY) {
+            errno = 0;
+    }
     if (unlikely(!str)) {
         fprintf(stderr, "%s\n", "Error: main_workflow_malloc");
         return -1;
