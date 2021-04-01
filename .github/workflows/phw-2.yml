@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [ making-phw-2 ]
+  pull_request:
+    branches: [ making-phw-2 ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Static code analysis
+        shell: bash
+        run: ./linters/run.sh
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE
+
+      - name: Valgring install
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: sudo apt install -y valgrind
+
+      - name: Valgring check
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          make &&
+          valgrind --leak-check=full --track-origins=yes ./project/main
+
+      - name: Tests
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          echo "adadsfadfs
+          adfadfs
+          asdf
+          asdf
+          a
+          df
+          adf
+
+          asdf
+          asd
+          f
+          asdf
+          asd
+          fasdf
+          a
+          sdf
+          :::)))))))
+          ^:(:(:()))
+          :()" |
+          ./build/project/test/mytest
+
+      - name: Code coverage
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          gcov ./project/CMakeFiles/parcer_in_parallel.dir/src/parcer_in_parallel.c.gcda ./project/CMakeFiles/parcer_in_series.dir/src/parcer_in_series.c.gcda
+
