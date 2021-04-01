@@ -144,7 +144,7 @@ int threads_exec(char* str, long int* tone) {
             }
             if (*(args[i].str) == '(') {
                 (*tone)--;
-            }            
+            }
         }
     }
 
