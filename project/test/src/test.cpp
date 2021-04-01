@@ -49,7 +49,6 @@ TEST(compare_methods, main_workflow) {
     time += (finish_in_series.tv_nsec - start_in_series.tv_nsec) / NANOSECONDS;
     fprintf(stdout, "Parcer in series: %lf\n", time);
 
-    time = 0;
     long int tone_in_parallel = 0;
     clock_gettime(CLOCK_MONOTONIC, &start_in_parallel);
     pthread_main_workflow(f, &tone_in_parallel);
