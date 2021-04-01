@@ -101,6 +101,9 @@ int main_workflow_malloc(FILE* is, long int* tone) {
 int main_workflow_mmap(FILE* is, long int* tone) {
     struct stat statbuf;
     int fd = fileno(is);
+    if (errno == ENOTTY) {
+        errno = 0;
+    }
     if (unlikely(error_handler("fileno"))) {
         return -1;
     }

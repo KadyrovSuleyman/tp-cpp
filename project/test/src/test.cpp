@@ -5,7 +5,7 @@ extern "C" {
     #include "parcer_in_parallel.h"
 }
 
-TEST(in_serial_mmap_test, main_workflow) {
+TEST(in_series_mmap_test, main_workflow) {
     FILE* f = fopen("./project/test/data/case_1/test.dat", "r");
     long int tone = 0;
     main_workflow(f, &tone);
@@ -15,7 +15,7 @@ TEST(in_serial_mmap_test, main_workflow) {
     ASSERT_EQ(tone, -3);
 }
 
-// TEST(in_serial_malloc_test, main_workflow) {
+// TEST(in_series_malloc_test, main_workflow) {
 //     long int tone = 0;
 //     main_workflow(stdin, &tone);
 //     fprintf(stdout, "%ld\n", tone);
