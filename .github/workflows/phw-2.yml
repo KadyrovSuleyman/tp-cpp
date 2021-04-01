@@ -32,20 +32,20 @@ jobs:
         shell: bash
         run: cmake --build . --config $BUILD_TYPE
 
-      # - name: Valgring install
-      #   working-directory: ${{github.workspace}}
-      #   shell: bash
-      #   run: sudo apt install -y valgrind
+      - name: Valgring install
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: sudo apt install -y valgrind
 
-      # - name: Valgring check
-      #   shell: bash
-      #   working-directory: ${{github.workspace}}/build
-      #   run: |
-      #     make &&
-      #     valgrind --leak-check=full --track-origins=yes ./project/main
+      - name: Valgring check
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          make &&
+          valgrind --leak-check=full --track-origins=yes ./project/main
 
-          # ./build/project/test/mytest
-          # ls && cd ./project/test && ls
+          ./build/project/test/mytest
+          ls && cd ./project/test && ls
 
       - name: Tests
         shell: bash
@@ -72,9 +72,9 @@ jobs:
           :()" |
           ./build/project/test/mytest
 
-      # - name: Code coverage
-      #   shell: bash
-      #   working-directory: ${{github.workspace}}/build
-      #   run: |
-      #     gcov ./project/CMakeFiles/parcer_in_parallel.dir/src/parcer_in_parallel.c.gcda ./project/CMakeFiles/parcer_in_series.dir/src/parcer_in_series.c.gcda
+      - name: Code coverage
+        shell: bash
+        working-directory: ${{github.workspace}}/build
+        run: |
+          gcov ./project/CMakeFiles/parcer_in_parallel.dir/src/parcer_in_parallel.c.gcda ./project/CMakeFiles/parcer_in_series.dir/src/parcer_in_series.c.gcda
 
